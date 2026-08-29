@@ -687,6 +687,10 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
     display: block;
 }
 
+.mobile-sidebar-toggle {
+    display: none;
+}
+
 @media (min-width: 992px) {
 
     /* The desktop hide logic is completely removed so the semi-nav class can dictate standard shrinking instead of hiding entirely */
@@ -702,6 +706,30 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         position: relative;
         z-index: 3;
         margin-right: 6px;
+    }
+
+    body.sidebar-menu-opened .vertical-sidebar .mobile-sidebar-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 68px;
+        right: 14px;
+        z-index: 5;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(15, 98, 106, 0.10);
+        color: var(--primary-color, #0f626a);
+        font-size: 23px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    body.sidebar-menu-opened .vertical-sidebar .mobile-sidebar-toggle:active {
+        background: rgba(15, 98, 106, 0.18);
     }
 
     nav {

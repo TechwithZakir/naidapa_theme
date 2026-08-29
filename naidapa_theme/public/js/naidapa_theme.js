@@ -170,6 +170,15 @@
         $(document).off('click.naidapa_collapse', '.vertical-sidebar [data-bs-toggle="collapse"]').on('click.naidapa_collapse', '.vertical-sidebar [data-bs-toggle="collapse"]', function (e) {
             naidapa_theme.toggle_collapse(this, e);
         });
+
+        $(document).off('click.naidapa_mobile_sidebar', '.mobile-sidebar-toggle').on('click.naidapa_mobile_sidebar', '.mobile-sidebar-toggle', function (e) {
+            e.preventDefault();
+            $('body').removeClass('sidebar-menu-opened');
+            $('.vertical-sidebar').removeClass('semi-nav');
+            $('.header-toggle')
+                .attr('aria-expanded', 'false')
+                .find('iconify-icon').attr('icon', 'line-md:menu');
+        });
     };
 
     naidapa_theme.run_patches = function () {
