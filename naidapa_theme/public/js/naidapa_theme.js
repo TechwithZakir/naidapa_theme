@@ -213,6 +213,8 @@
                 $brand.before(toggle_html);
             } else if ($navbarContainer.length) {
                 $navbarContainer.prepend(toggle_html);
+            } else {
+                $('.header-main').first().prepend(toggle_html);
             }
 
         }

@@ -664,6 +664,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 
 /* Sidebar Toggle and Responsiveness */
 .naidapa-header-toggle {
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
@@ -671,13 +672,22 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
     height: 40px;
     margin-right: 12px;
     padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--text-primary);
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    background-color: #f4f5f6 !important;
+    color: #1f2937 !important;
     font-size: 22px;
     line-height: 1;
     cursor: pointer;
+    position: fixed !important;
+    top: 18px !important;
+    left: 298px !important;
+    z-index: 1050 !important;
+    transition: left 0.3s ease, background-color 0.2s ease;
+}
+
+body.sidebar-menu-opened .naidapa-header-toggle {
+    left: 92px !important;
 }
 
 .naidapa-header-toggle iconify-icon {
@@ -703,9 +713,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         background-color: #f4f5f6 !important;
         color: #1f2937 !important;
         box-shadow: none !important;
-        margin-right: 6px;
-        position: relative;
-        z-index: 1045;
+        margin: 0;
     }
 
     .naidapa-header-toggle:hover,
