@@ -5,11 +5,15 @@
 
     naidapa_theme.setup = function () {
         $('body').addClass('naidapa-theme-active');
-        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (!naidapa_theme.is_mobile() && localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
         naidapa_theme.run_patches();
+    };
+
+    naidapa_theme.is_mobile = function () {
+        return window.matchMedia('(max-width: 991px)').matches;
     };
 
     naidapa_theme.setup_icon_picker = function () {
@@ -169,7 +173,7 @@
     };
 
     naidapa_theme.run_patches = function () {
-        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (!naidapa_theme.is_mobile() && localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
@@ -191,33 +195,47 @@
     };
 
     naidapa_theme.inject_navbar_toggle = function () {
-        const isCollapsed = $('body').hasClass('sidebar-menu-opened');
-        const iconName = isCollapsed ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left';
+        const isMobile = naidapa_theme.is_mobile();
+        const isActive = $('body').hasClass('sidebar-menu-opened');
+        const iconName = isMobile
+            ? (isActive ? 'line-md:close' : 'line-md:menu')
+            : (isActive ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left');
 
         if ($('.header-toggle').length === 0) {
-            const toggle_html = `<span class="header-toggle" style="margin-right: 15px; cursor: pointer; display: flex; align-items: center; font-size: 22px; color: var(--text-primary);"><iconify-icon icon="${iconName}"></iconify-icon></span>`;
-            $('.navbar-brand').before(toggle_html);
+            const toggle_html = `<button type="button" class="header-toggle" aria-label="${__('Toggle navigation menu')}" aria-expanded="${isMobile && isActive}" title="${__('Toggle navigation menu')}"><iconify-icon icon="${iconName}"></iconify-icon></button>`;
+            const $brand = $('.navbar-brand').first();
+            const $navbarContainer = $('.navbar .container, .navbar .container-fluid').first();
+
+            if ($brand.length) {
+                $brand.before(toggle_html);
+            } else if ($navbarContainer.length) {
+                $navbarContainer.prepend(toggle_html);
+            }
 
             // Bind click event to toggle sidebar
             $('.header-toggle').on('click', function () {
                 const $body = $('body');
                 const $icon = $(this).find('iconify-icon');
                 const $sidebar = $('.vertical-sidebar');
+                const mobile = naidapa_theme.is_mobile();
 
                 if ($body.hasClass('sidebar-menu-opened')) {
                     $body.removeClass('sidebar-menu-opened');
                     $sidebar.removeClass('semi-nav');
-                    $icon.attr('icon', 'line-md:menu-fold-left');
-                    localStorage.setItem('naidapa_sidebar_collapsed', 'false');
+                    $icon.attr('icon', mobile ? 'line-md:menu' : 'line-md:menu-fold-left');
+                    if (!mobile) localStorage.setItem('naidapa_sidebar_collapsed', 'false');
                 } else {
                     $body.addClass('sidebar-menu-opened');
-                    $sidebar.addClass('semi-nav');
-                    $icon.attr('icon', 'line-md:menu-fold-right');
-                    localStorage.setItem('naidapa_sidebar_collapsed', 'true');
+                    $sidebar.toggleClass('semi-nav', !mobile);
+                    $icon.attr('icon', mobile ? 'line-md:close' : 'line-md:menu-fold-right');
+                    if (!mobile) localStorage.setItem('naidapa_sidebar_collapsed', 'true');
                 }
+                $(this).attr('aria-expanded', mobile && $body.hasClass('sidebar-menu-opened'));
             });
         } else {
-            $('.header-toggle iconify-icon').attr('icon', iconName);
+            $('.header-toggle')
+                .attr('aria-expanded', isMobile && isActive)
+                .find('iconify-icon').attr('icon', iconName);
         }
     };
 
