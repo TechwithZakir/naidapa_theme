@@ -5,11 +5,7 @@
 
     naidapa_theme.setup = function () {
         $('body').addClass('naidapa-theme-active');
-        if (naidapa_theme.is_mobile()) {
-            if (!$('body').hasClass('sidebar-menu-opened')) {
-                $('body').addClass('mobile-sidebar-closed');
-            }
-        } else if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
@@ -18,45 +14,6 @@
 
     naidapa_theme.is_mobile = function () {
         return window.matchMedia('(max-width: 991px)').matches;
-    };
-
-    // Backward compatibility for sidebar HTML cached before the single-toggle update.
-    naidapa_theme.close_mobile_sidebar = function (event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        $('body')
-            .removeClass('sidebar-menu-opened')
-            .addClass('mobile-sidebar-closed');
-        $('.vertical-sidebar').removeClass('semi-nav');
-        $('.header-toggle')
-            .attr('aria-expanded', 'false')
-            .find('iconify-icon').attr('icon', 'line-md:menu');
-        $('#naidapa-mobile-sidebar-toggle')
-            .attr('aria-expanded', 'false')
-            .find('iconify-icon').attr('icon', 'line-md:menu');
-
-        return false;
-    };
-
-    naidapa_theme.toggle_mobile_sidebar = function (event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        const $body = $('body');
-        const opening = $body.hasClass('mobile-sidebar-closed');
-        $body.toggleClass('mobile-sidebar-closed', !opening);
-        $body.toggleClass('sidebar-menu-opened', opening);
-        $('.vertical-sidebar').removeClass('semi-nav');
-        $('#naidapa-mobile-sidebar-toggle')
-            .attr('aria-expanded', opening)
-            .find('iconify-icon').attr('icon', opening ? 'line-md:menu-fold-right' : 'line-md:menu');
-
-        return false;
     };
 
     naidapa_theme.setup_icon_picker = function () {
@@ -217,7 +174,7 @@
     };
 
     naidapa_theme.run_patches = function () {
-        if (!naidapa_theme.is_mobile() && localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
@@ -238,65 +195,19 @@
         });
     };
 
-    naidapa_theme.place_mobile_toggle = function ($toggle, drawerOpen) {
-        if (!$toggle || !$toggle.length) return;
-
-        if (naidapa_theme.is_mobile() && drawerOpen) {
-            const $logoPanel = $('.vertical-sidebar .app-logo').first();
-            if ($logoPanel.length && !$toggle.parent().is($logoPanel)) {
-                $logoPanel.append($toggle);
-            }
-            return;
-        }
-
-        const $brand = $('.navbar-brand').first();
-        const $navbarContainer = $('.navbar .container, .navbar .container-fluid').first();
-        if ($brand.length && !$toggle.next().is($brand)) {
-            $brand.before($toggle);
-        } else if (!$brand.length && $navbarContainer.length && !$toggle.parent().is($navbarContainer)) {
-            $navbarContainer.prepend($toggle);
-        }
-    };
-
     naidapa_theme.inject_navbar_toggle = function () {
-        const isMobile = naidapa_theme.is_mobile();
         const $body = $('body');
-        const isActive = $body.hasClass('sidebar-menu-opened');
-        const isMobileClosed = $body.hasClass('mobile-sidebar-closed');
-        const drawerOpen = isMobile && isActive && !isMobileClosed;
-        const iconName = isMobile
-            ? (drawerOpen ? 'line-md:menu-fold-right' : 'line-md:menu')
-            : (isActive ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left');
+        const isCollapsed = $body.hasClass('sidebar-menu-opened');
+        const iconName = isCollapsed ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left';
 
-        // Remove the obsolete drawer-local control from cached templates.
+        // Clean up obsolete mobile drawer controls from earlier builds.
         $('.mobile-sidebar-toggle').remove();
-
-        if (isMobile) {
-            // Mobile uses one dedicated toggle for both opening and closing.
-            $('.header-toggle').remove();
-            $('#naidapa-mobile-drawer-close, #naidapa-mobile-drawer-open').remove();
-            let $mobileToggle = $('#naidapa-mobile-sidebar-toggle');
-            if (!$mobileToggle.length) {
-                $mobileToggle = $(`<button type="button" id="naidapa-mobile-sidebar-toggle" aria-label="${__('Toggle navigation menu')}" title="${__('Toggle navigation menu')}"><iconify-icon icon="line-md:menu-fold-right"></iconify-icon></button>`);
-                $('.app-wrapper').first().append($mobileToggle);
-            }
-            const mobileClosed = $body.hasClass('mobile-sidebar-closed');
-            $mobileToggle
-                .attr('aria-expanded', !mobileClosed)
-                .find('iconify-icon').attr('icon', mobileClosed ? 'line-md:menu' : 'line-md:menu-fold-right');
-            $mobileToggle.off('click.naidapa_mobile_toggle').on('click.naidapa_mobile_toggle', function (event) {
-                naidapa_theme.toggle_mobile_sidebar(event);
-            });
-            return;
-        }
-
-        $body.removeClass('mobile-sidebar-closed');
         $('#naidapa-mobile-sidebar-toggle, #naidapa-mobile-drawer-close, #naidapa-mobile-drawer-open').remove();
 
-        if ($('.header-toggle').length === 0) {
-            const toggle_html = `<button type="button" class="header-toggle" aria-label="${__('Toggle navigation menu')}" aria-expanded="${isMobile && isActive}" title="${__('Toggle navigation menu')}"><iconify-icon icon="${iconName}"></iconify-icon></button>`;
+        if ($('.naidapa-header-toggle').length === 0) {
+            const toggle_html = `<button type="button" class="header-toggle naidapa-header-toggle" aria-label="${__('Toggle navigation menu')}" aria-expanded="${!isCollapsed}" title="${__('Toggle navigation menu')}"><iconify-icon icon="${iconName}"></iconify-icon></button>`;
             const $brand = $('.navbar-brand').first();
-            const $navbarContainer = $('.navbar .container, .navbar .container-fluid').first();
+            const $navbarContainer = $('.navbar .container, .navbar .container-fluid, .navbar').first();
 
             if ($brand.length) {
                 $brand.before(toggle_html);
@@ -306,31 +217,18 @@
 
         }
 
-        const $toggle = $('.header-toggle').first();
+        const $toggle = $('.naidapa-header-toggle').first();
         $toggle
-            .attr('aria-expanded', drawerOpen)
+            .attr('aria-expanded', !isCollapsed)
             .find('iconify-icon').attr('icon', iconName);
-        naidapa_theme.place_mobile_toggle($toggle, drawerOpen);
 
         $toggle.off('click.naidapa_sidebar_toggle').on('click.naidapa_sidebar_toggle', function () {
-            const mobile = naidapa_theme.is_mobile();
             const $sidebar = $('.vertical-sidebar');
-
-            if (mobile) {
-                const currentlyOpen = $body.hasClass('sidebar-menu-opened') && !$body.hasClass('mobile-sidebar-closed');
-                $body.toggleClass('sidebar-menu-opened', !currentlyOpen);
-                $body.toggleClass('mobile-sidebar-closed', currentlyOpen);
-                $sidebar.removeClass('semi-nav');
-                $(this).attr('aria-expanded', !currentlyOpen)
-                    .find('iconify-icon').attr('icon', currentlyOpen ? 'line-md:menu' : 'line-md:menu-fold-right');
-                naidapa_theme.place_mobile_toggle($(this), !currentlyOpen);
-                return;
-            }
-
             const collapsed = $body.hasClass('sidebar-menu-opened');
             $body.toggleClass('sidebar-menu-opened', !collapsed);
             $sidebar.toggleClass('semi-nav', !collapsed);
-            $(this).find('iconify-icon').attr('icon', collapsed ? 'line-md:menu-fold-left' : 'line-md:menu-fold-right');
+            $(this).attr('aria-expanded', collapsed)
+                .find('iconify-icon').attr('icon', collapsed ? 'line-md:menu-fold-left' : 'line-md:menu-fold-right');
             localStorage.setItem('naidapa_sidebar_collapsed', collapsed ? 'false' : 'true');
         });
     };
