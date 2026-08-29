@@ -190,6 +190,28 @@
         });
     };
 
+    naidapa_theme.position_header_toggle = function () {
+        const $toggle = $('.header-toggle').first();
+        if (!$toggle.length) return;
+
+        const mobileOpen = window.matchMedia('(max-width: 991px)').matches && $('body').hasClass('sidebar-menu-opened');
+        let $placeholder = $('.naidapa-toggle-placeholder').first();
+
+        if (mobileOpen) {
+            if (!$placeholder.length) {
+                $placeholder = $('<span class="naidapa-toggle-placeholder" aria-hidden="true"></span>');
+                $toggle.before($placeholder);
+            }
+            const $logoPanel = $('.vertical-sidebar .app-logo').first();
+            if ($logoPanel.length && !$toggle.parent().is($logoPanel)) {
+                $logoPanel.append($toggle);
+            }
+        } else if ($placeholder.length) {
+            $placeholder.before($toggle);
+            $placeholder.remove();
+        }
+    };
+
     naidapa_theme.inject_navbar_toggle = function () {
         const isCollapsed = $('body').hasClass('sidebar-menu-opened');
         const iconName = isCollapsed ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left';
@@ -215,10 +237,12 @@
                     $icon.attr('icon', 'line-md:menu-fold-right');
                     localStorage.setItem('naidapa_sidebar_collapsed', 'true');
                 }
+                naidapa_theme.position_header_toggle();
             });
         } else {
             $('.header-toggle iconify-icon').attr('icon', iconName);
         }
+        naidapa_theme.position_header_toggle();
     };
 
     naidapa_theme.mutate_custom_elements = function () {
@@ -346,6 +370,10 @@
     $(document).on('app_ready page-change', function () {
         naidapa_theme.run_patches();
         naidapa_theme.mutate_charts();
+    });
+
+    $(window).off('resize.naidapa_toggle').on('resize.naidapa_toggle', function () {
+        naidapa_theme.position_header_toggle();
     });
 
 })();
