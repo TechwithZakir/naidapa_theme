@@ -687,6 +687,11 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
     display: block;
 }
 
+#naidapa-mobile-drawer-close,
+#naidapa-mobile-drawer-open {
+    display: none !important;
+}
+
 @media (min-width: 992px) {
 
     /* The desktop hide logic is completely removed so the semi-nav class can dictate standard shrinking instead of hiding entirely */
@@ -696,6 +701,48 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 @media (max-width: 991px) {
+    #naidapa-mobile-drawer-close,
+    #naidapa-mobile-drawer-open {
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        background-color: #f4f5f6 !important;
+        color: #1f2937 !important;
+        box-shadow: none !important;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    #naidapa-mobile-drawer-close {
+        display: inline-flex !important;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        z-index: 10;
+        transform: translateY(-50%);
+    }
+
+    body.mobile-sidebar-closed #naidapa-mobile-drawer-open {
+        display: inline-flex !important;
+        flex: 0 0 auto;
+        margin-right: 6px;
+    }
+
+    #naidapa-mobile-drawer-close:hover,
+    #naidapa-mobile-drawer-close:focus,
+    #naidapa-mobile-drawer-open:hover,
+    #naidapa-mobile-drawer-open:focus {
+        border-color: #c7cbd1 !important;
+        background-color: #e9ecef !important;
+        color: #1f2937 !important;
+        box-shadow: none !important;
+    }
+
     .header-toggle {
         display: inline-flex !important;
         visibility: visible !important;
