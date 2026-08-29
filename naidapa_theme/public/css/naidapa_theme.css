@@ -675,6 +675,28 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 @media (max-width: 991px) {
+    /* Keep the existing header toggle above the open mobile sidebar. */
+    body.sidebar-menu-opened .header-toggle {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        top: 18px !important;
+        left: 234px !important;
+        z-index: 2147483000 !important;
+        width: 36px !important;
+        height: 36px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        background-color: #f4f5f6 !important;
+        color: #1f2937 !important;
+        pointer-events: auto !important;
+    }
+
     nav {
         margin-left: -286px;
     }
