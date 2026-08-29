@@ -218,12 +218,17 @@
         // This control belongs inside the open mobile drawer. Never render it on desktop.
         if (isMobile) {
             const $sidebar = $('.vertical-sidebar').first();
-            if ($sidebar.length && !$sidebar.find('.mobile-sidebar-toggle').length) {
-                const $mobileToggle = $(`<button type="button" class="mobile-sidebar-toggle" aria-label="${__('Close navigation menu')}" title="${__('Close navigation menu')}"><iconify-icon icon="line-md:menu-fold-right"></iconify-icon></button>`);
+            let $mobileToggle = $sidebar.find('.mobile-sidebar-toggle').first();
+            if ($sidebar.length && !$mobileToggle.length) {
+                $mobileToggle = $(`<button type="button" class="mobile-sidebar-toggle" aria-label="${__('Close navigation menu')}" title="${__('Close navigation menu')}"><iconify-icon icon="line-md:menu-fold-right"></iconify-icon></button>`);
                 $mobileToggle.on('click', function (e) {
                     naidapa_theme.close_mobile_sidebar(e);
                 });
-                $sidebar.append($mobileToggle);
+            }
+
+            const $firstMenuItem = $sidebar.find('.main-nav > li').first();
+            if ($mobileToggle.length && $firstMenuItem.length && !$mobileToggle.parent().is($firstMenuItem)) {
+                $firstMenuItem.append($mobileToggle);
             }
         } else {
             $('.mobile-sidebar-toggle').remove();

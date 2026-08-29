@@ -713,11 +713,12 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: 68px;
-        right: 14px;
+        top: 50%;
+        right: 8px;
+        transform: translateY(-50%);
         z-index: 5;
-        width: 42px;
-        height: 42px;
+        width: 36px;
+        height: 36px;
         padding: 0;
         border: 0;
         border-radius: 50%;
@@ -726,6 +727,14 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         font-size: 23px;
         line-height: 1;
         cursor: pointer;
+    }
+
+    .vertical-sidebar .main-nav > li:first-child {
+        position: relative;
+    }
+
+    .vertical-sidebar .main-nav > li:first-child > a {
+        padding-right: 50px !important;
     }
 
     .vertical-sidebar .mobile-sidebar-toggle:active {
