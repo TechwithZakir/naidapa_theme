@@ -726,17 +726,23 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         width: 36px;
         height: 36px;
         padding: 0;
-        border: 0;
-        border-radius: 50%;
-        background: rgba(15, 98, 106, 0.10);
-        color: var(--primary-color, #0f626a);
+        border: 1px solid var(--border-color, #d1d5db);
+        border-radius: var(--border-radius, 6px);
+        background: var(--control-bg, var(--fg-color, #f3f4f6));
+        color: var(--text-color, #1f2937);
         font-size: 23px;
         line-height: 1;
         cursor: pointer;
     }
 
     .vertical-sidebar .mobile-sidebar-toggle:active {
-        background: rgba(15, 98, 106, 0.18);
+        background: var(--fg-hover-color, #e5e7eb);
+    }
+
+    body.mobile-sidebar-closed nav.vertical-sidebar {
+        margin-left: 0 !important;
+        transform: translateX(-100%) !important;
+        pointer-events: none !important;
     }
 
     nav {

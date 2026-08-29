@@ -21,7 +21,7 @@
             event.preventDefault();
             event.stopPropagation();
         }
-        $('body').removeClass('sidebar-menu-opened');
+        $('body').removeClass('sidebar-menu-opened').addClass('mobile-sidebar-closed');
         $('.vertical-sidebar').removeClass('semi-nav');
         $('.header-toggle')
             .attr('aria-expanded', 'false')
@@ -227,6 +227,7 @@
             }
 
         } else {
+            $('body').removeClass('mobile-sidebar-closed');
             $('.mobile-sidebar-toggle').remove();
         }
 
@@ -248,8 +249,17 @@
                 const $sidebar = $('.vertical-sidebar');
                 const mobile = naidapa_theme.is_mobile();
 
+                if (mobile && $body.hasClass('mobile-sidebar-closed')) {
+                    $body.removeClass('mobile-sidebar-closed').addClass('sidebar-menu-opened');
+                    $sidebar.removeClass('semi-nav');
+                    $icon.attr('icon', 'line-md:close');
+                    $(this).attr('aria-expanded', 'true');
+                    return;
+                }
+
                 if ($body.hasClass('sidebar-menu-opened')) {
                     $body.removeClass('sidebar-menu-opened');
+                    $body.toggleClass('mobile-sidebar-closed', mobile);
                     $sidebar.removeClass('semi-nav');
                     $icon.attr('icon', mobile ? 'line-md:menu' : 'line-md:menu-fold-left');
                     if (!mobile) localStorage.setItem('naidapa_sidebar_collapsed', 'false');
