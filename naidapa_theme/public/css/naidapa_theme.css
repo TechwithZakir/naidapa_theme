@@ -666,6 +666,10 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 /* Sidebar Toggle and Responsiveness */
+.mobile-sidebar-close {
+    display: none !important;
+}
+
 @media (min-width: 992px) {
 
     /* The desktop hide logic is completely removed so the semi-nav class can dictate standard shrinking instead of hiding entirely */
@@ -675,26 +679,39 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 @media (max-width: 991px) {
-    /* Keep the existing header toggle above the open mobile sidebar. */
-    body.sidebar-menu-opened .header-toggle {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        top: 18px !important;
-        left: 234px !important;
-        z-index: 2147483000 !important;
-        width: 36px !important;
-        height: 36px !important;
-        margin: 0 !important;
-        padding: 0 !important;
+    nav.vertical-sidebar .app-logo {
+        position: relative !important;
+        padding-right: 54px !important;
+    }
+
+    .mobile-sidebar-close {
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
+        position: absolute !important;
+        top: 50% !important;
+        right: 12px !important;
+        transform: translateY(-50%) !important;
+        z-index: 20 !important;
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
         border: 1px solid #d1d5db !important;
         border-radius: 6px !important;
         background-color: #f4f5f6 !important;
         color: #1f2937 !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        cursor: pointer !important;
         pointer-events: auto !important;
+    }
+
+    .mobile-sidebar-close:hover,
+    .mobile-sidebar-close:focus {
+        background-color: #e9ecef !important;
+        border-color: #c7cbd1 !important;
+        color: #1f2937 !important;
+        box-shadow: none !important;
     }
 
     nav {
