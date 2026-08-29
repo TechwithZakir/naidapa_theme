@@ -226,10 +226,6 @@
                 });
             }
 
-            const $firstMenuItem = $sidebar.find('.main-nav > li').first();
-            if ($mobileToggle.length && $firstMenuItem.length && !$mobileToggle.parent().is($firstMenuItem)) {
-                $firstMenuItem.append($mobileToggle);
-            }
         } else {
             $('.mobile-sidebar-toggle').remove();
         }

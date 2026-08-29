@@ -688,7 +688,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 .mobile-sidebar-toggle {
-    display: none;
+    display: none !important;
 }
 
 @media (min-width: 992px) {
@@ -700,6 +700,12 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 @media (max-width: 991px) {
+    .vertical-sidebar .app-logo {
+        position: relative !important;
+        overflow: visible !important;
+        padding-right: 58px !important;
+    }
+
     .navbar .header-toggle {
         display: inline-flex !important;
         visibility: visible !important;
@@ -714,7 +720,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         justify-content: center;
         position: absolute;
         top: 50%;
-        right: 8px;
+        right: 12px;
         transform: translateY(-50%);
         z-index: 5;
         width: 36px;
@@ -727,14 +733,6 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         font-size: 23px;
         line-height: 1;
         cursor: pointer;
-    }
-
-    .vertical-sidebar .main-nav > li:first-child {
-        position: relative;
-    }
-
-    .vertical-sidebar .main-nav > li:first-child > a {
-        padding-right: 50px !important;
     }
 
     .vertical-sidebar .mobile-sidebar-toggle:active {
