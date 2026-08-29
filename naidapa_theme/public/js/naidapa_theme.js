@@ -171,14 +171,6 @@
             naidapa_theme.toggle_collapse(this, e);
         });
 
-        $(document).off('click.naidapa_mobile_sidebar', '.mobile-sidebar-toggle').on('click.naidapa_mobile_sidebar', '.mobile-sidebar-toggle', function (e) {
-            e.preventDefault();
-            $('body').removeClass('sidebar-menu-opened');
-            $('.vertical-sidebar').removeClass('semi-nav');
-            $('.header-toggle')
-                .attr('aria-expanded', 'false')
-                .find('iconify-icon').attr('icon', 'line-md:menu');
-        });
     };
 
     naidapa_theme.run_patches = function () {
@@ -209,6 +201,26 @@
         const iconName = isMobile
             ? (isActive ? 'line-md:close' : 'line-md:menu')
             : (isActive ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left');
+
+        // This control belongs inside the open mobile drawer. Never render it on desktop.
+        if (isMobile) {
+            const $sidebar = $('.vertical-sidebar').first();
+            if ($sidebar.length && !$sidebar.find('.mobile-sidebar-toggle').length) {
+                const $mobileToggle = $(`<button type="button" class="mobile-sidebar-toggle" aria-label="${__('Close navigation menu')}" title="${__('Close navigation menu')}"><iconify-icon icon="line-md:menu-fold-right"></iconify-icon></button>`);
+                $mobileToggle.on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $('body').removeClass('sidebar-menu-opened');
+                    $('.vertical-sidebar').removeClass('semi-nav');
+                    $('.header-toggle')
+                        .attr('aria-expanded', 'false')
+                        .find('iconify-icon').attr('icon', 'line-md:menu');
+                });
+                $sidebar.append($mobileToggle);
+            }
+        } else {
+            $('.mobile-sidebar-toggle').remove();
+        }
 
         if ($('.header-toggle').length === 0) {
             const toggle_html = `<button type="button" class="header-toggle" aria-label="${__('Toggle navigation menu')}" aria-expanded="${isMobile && isActive}" title="${__('Toggle navigation menu')}"><iconify-icon icon="${iconName}"></iconify-icon></button>`;
@@ -373,6 +385,10 @@
     $(document).on('app_ready page-change', function () {
         naidapa_theme.run_patches();
         naidapa_theme.mutate_charts();
+    });
+
+    $(window).off('resize.naidapa_sidebar').on('resize.naidapa_sidebar', function () {
+        naidapa_theme.inject_navbar_toggle();
     });
 
 })();
