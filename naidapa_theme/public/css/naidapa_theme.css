@@ -331,7 +331,8 @@ nav.vertical-sidebar .nav-profile-wrapper .user-avatar-circle {
     box-shadow: 0 2px 8px rgba(15, 98, 106, 0.2);
 }
 
-/* Semi-nav (collapsed sidebar) shared by desktop and mobile. */
+/* Semi-nav (collapsed sidebar) desktop overrides - EXACT MATCH FOR KI-ADMIN SPECIFICITY */
+@media (min-width: 992px) {
     .app-wrapper nav.semi-nav ~ .app-content,
     body.sidebar-menu-opened .app-wrapper .app-content {
         padding-left: 80px !important;
@@ -452,6 +453,7 @@ nav.vertical-sidebar .nav-profile-wrapper .user-avatar-circle {
         opacity: 1 !important;
         visibility: visible !important;
     }
+}
 /* Bordered Group Box Container & Submenu Styling */
 .vertical-sidebar .main-nav > li.sidebar-group-item {
     margin: 4px 0;
@@ -663,35 +665,8 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
 }
 
 /* Sidebar Toggle and Responsiveness */
-.naidapa-header-toggle {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 40px;
-    height: 40px;
-    margin-right: 12px;
-    padding: 0;
-    border: 1px solid #d1d5db !important;
-    border-radius: 6px !important;
-    background-color: #f4f5f6 !important;
-    color: #1f2937 !important;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    position: fixed !important;
-    top: 18px !important;
-    left: 298px !important;
-    z-index: 1050 !important;
-    transition: left 0.3s ease, background-color 0.2s ease;
-}
-
-body.sidebar-menu-opened .naidapa-header-toggle {
-    left: 92px !important;
-}
-
-.naidapa-header-toggle iconify-icon {
-    display: block;
+.mobile-sidebar-top-toggle {
+    display: none;
 }
 
 @media (min-width: 992px) {
@@ -703,52 +678,54 @@ body.sidebar-menu-opened .naidapa-header-toggle {
 }
 
 @media (max-width: 991px) {
-    .naidapa-header-toggle {
+    nav.vertical-sidebar .app-logo {
+        position: relative !important;
+        padding-right: 58px !important;
+    }
+
+    .mobile-sidebar-top-toggle {
         display: inline-flex !important;
-        visibility: visible !important;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        z-index: 10;
+        transform: translateY(-50%);
         width: 36px;
         height: 36px;
-        border: 1px solid #d1d5db !important;
-        border-radius: 6px !important;
-        background-color: #f4f5f6 !important;
-        color: #1f2937 !important;
-        box-shadow: none !important;
-        margin: 0;
+        padding: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background-color: #f4f5f6;
+        color: #1f2937;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
     }
 
-    .naidapa-header-toggle:hover,
-    .naidapa-header-toggle:focus {
-        border-color: #c7cbd1 !important;
-        background-color: #e9ecef !important;
-        color: #1f2937 !important;
-        box-shadow: none !important;
+    .mobile-sidebar-top-toggle:hover,
+    .mobile-sidebar-top-toggle:focus {
+        background-color: #e9ecef;
+        border-color: #c7cbd1;
+        color: #1f2937;
+        box-shadow: none;
     }
 
-    /* Hide obsolete controls from cached sidebar templates. */
-    .vertical-sidebar .mobile-sidebar-toggle {
-        display: none !important;
-    }
-
-    nav.vertical-sidebar {
-        margin-left: 0 !important;
-        transform: none !important;
-        width: 286px !important;
+    nav {
+        margin-left: -286px;
     }
 
     .app-wrapper .app-content {
-        padding-left: 286px !important;
+        padding-left: 15px;
         padding-right: 15px;
         width: 100%;
     }
 
-    nav.vertical-sidebar.semi-nav,
-    body.sidebar-menu-opened nav.vertical-sidebar {
-        width: 80px !important;
-    }
-
-    .app-wrapper nav.vertical-sidebar.semi-nav ~ .app-content,
-    body.sidebar-menu-opened .app-wrapper nav.vertical-sidebar ~ .app-content {
-        padding-left: 80px !important;
+    /* On mobile, sidebar-menu-opened shows the sidebar */
+    body.sidebar-menu-opened nav {
+        margin-left: 0;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
 }
 

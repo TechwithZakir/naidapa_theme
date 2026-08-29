@@ -12,10 +12,6 @@
         naidapa_theme.run_patches();
     };
 
-    naidapa_theme.is_mobile = function () {
-        return window.matchMedia('(max-width: 991px)').matches;
-    };
-
     naidapa_theme.setup_icon_picker = function () {
         const $target = $('[data-fieldname="custom_animated_icon"]');
         if ($target.length && !$target.find('.btn-icon-picker').length) {
@@ -171,6 +167,19 @@
             naidapa_theme.toggle_collapse(this, e);
         });
 
+        $(document).off('click.naidapa_mobile_top_toggle', '.mobile-sidebar-top-toggle').on('click.naidapa_mobile_top_toggle', '.mobile-sidebar-top-toggle', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const $body = $('body');
+            const $sidebar = $('.vertical-sidebar');
+            const isOpen = $body.hasClass('sidebar-menu-opened');
+
+            $body.toggleClass('sidebar-menu-opened', !isOpen);
+            $sidebar.toggleClass('semi-nav', !isOpen);
+            $('.header-toggle iconify-icon').attr('icon', isOpen ? 'line-md:menu-fold-left' : 'line-md:menu-fold-right');
+            localStorage.setItem('naidapa_sidebar_collapsed', isOpen ? 'false' : 'true');
+        });
     };
 
     naidapa_theme.run_patches = function () {
@@ -196,43 +205,34 @@
     };
 
     naidapa_theme.inject_navbar_toggle = function () {
-        const $body = $('body');
-        const isCollapsed = $body.hasClass('sidebar-menu-opened');
+        const isCollapsed = $('body').hasClass('sidebar-menu-opened');
         const iconName = isCollapsed ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left';
 
-        // Clean up obsolete mobile drawer controls from earlier builds.
-        $('.mobile-sidebar-toggle').remove();
-        $('#naidapa-mobile-sidebar-toggle, #naidapa-mobile-drawer-close, #naidapa-mobile-drawer-open').remove();
+        if ($('.header-toggle').length === 0) {
+            const toggle_html = `<span class="header-toggle" style="margin-right: 15px; cursor: pointer; display: flex; align-items: center; font-size: 22px; color: var(--text-primary);"><iconify-icon icon="${iconName}"></iconify-icon></span>`;
+            $('.navbar-brand').before(toggle_html);
 
-        if ($('.naidapa-header-toggle').length === 0) {
-            const toggle_html = `<button type="button" class="header-toggle naidapa-header-toggle" aria-label="${__('Toggle navigation menu')}" aria-expanded="${!isCollapsed}" title="${__('Toggle navigation menu')}"><iconify-icon icon="${iconName}"></iconify-icon></button>`;
-            const $brand = $('.navbar-brand').first();
-            const $navbarContainer = $('.navbar .container, .navbar .container-fluid, .navbar').first();
+            // Bind click event to toggle sidebar
+            $('.header-toggle').on('click', function () {
+                const $body = $('body');
+                const $icon = $(this).find('iconify-icon');
+                const $sidebar = $('.vertical-sidebar');
 
-            if ($brand.length) {
-                $brand.before(toggle_html);
-            } else if ($navbarContainer.length) {
-                $navbarContainer.prepend(toggle_html);
-            } else {
-                $('.header-main').first().prepend(toggle_html);
-            }
-
+                if ($body.hasClass('sidebar-menu-opened')) {
+                    $body.removeClass('sidebar-menu-opened');
+                    $sidebar.removeClass('semi-nav');
+                    $icon.attr('icon', 'line-md:menu-fold-left');
+                    localStorage.setItem('naidapa_sidebar_collapsed', 'false');
+                } else {
+                    $body.addClass('sidebar-menu-opened');
+                    $sidebar.addClass('semi-nav');
+                    $icon.attr('icon', 'line-md:menu-fold-right');
+                    localStorage.setItem('naidapa_sidebar_collapsed', 'true');
+                }
+            });
+        } else {
+            $('.header-toggle iconify-icon').attr('icon', iconName);
         }
-
-        const $toggle = $('.naidapa-header-toggle').first();
-        $toggle
-            .attr('aria-expanded', !isCollapsed)
-            .find('iconify-icon').attr('icon', iconName);
-
-        $toggle.off('click.naidapa_sidebar_toggle').on('click.naidapa_sidebar_toggle', function () {
-            const $sidebar = $('.vertical-sidebar');
-            const collapsed = $body.hasClass('sidebar-menu-opened');
-            $body.toggleClass('sidebar-menu-opened', !collapsed);
-            $sidebar.toggleClass('semi-nav', !collapsed);
-            $(this).attr('aria-expanded', collapsed)
-                .find('iconify-icon').attr('icon', collapsed ? 'line-md:menu-fold-left' : 'line-md:menu-fold-right');
-            localStorage.setItem('naidapa_sidebar_collapsed', collapsed ? 'false' : 'true');
-        });
     };
 
     naidapa_theme.mutate_custom_elements = function () {
@@ -360,10 +360,6 @@
     $(document).on('app_ready page-change', function () {
         naidapa_theme.run_patches();
         naidapa_theme.mutate_charts();
-    });
-
-    $(window).off('resize.naidapa_sidebar').on('resize.naidapa_sidebar', function () {
-        naidapa_theme.inject_navbar_toggle();
     });
 
 })();
