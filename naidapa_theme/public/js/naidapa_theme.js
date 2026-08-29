@@ -16,6 +16,19 @@
         return window.matchMedia('(max-width: 991px)').matches;
     };
 
+    naidapa_theme.close_mobile_sidebar = function (event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        $('body').removeClass('sidebar-menu-opened');
+        $('.vertical-sidebar').removeClass('semi-nav');
+        $('.header-toggle')
+            .attr('aria-expanded', 'false')
+            .find('iconify-icon').attr('icon', 'line-md:menu');
+        return false;
+    };
+
     naidapa_theme.setup_icon_picker = function () {
         const $target = $('[data-fieldname="custom_animated_icon"]');
         if ($target.length && !$target.find('.btn-icon-picker').length) {
@@ -208,13 +221,7 @@
             if ($sidebar.length && !$sidebar.find('.mobile-sidebar-toggle').length) {
                 const $mobileToggle = $(`<button type="button" class="mobile-sidebar-toggle" aria-label="${__('Close navigation menu')}" title="${__('Close navigation menu')}"><iconify-icon icon="line-md:menu-fold-right"></iconify-icon></button>`);
                 $mobileToggle.on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $('body').removeClass('sidebar-menu-opened');
-                    $('.vertical-sidebar').removeClass('semi-nav');
-                    $('.header-toggle')
-                        .attr('aria-expanded', 'false')
-                        .find('iconify-icon').attr('icon', 'line-md:menu');
+                    naidapa_theme.close_mobile_sidebar(e);
                 });
                 $sidebar.append($mobileToggle);
             }

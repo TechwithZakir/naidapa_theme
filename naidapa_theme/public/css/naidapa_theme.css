@@ -708,7 +708,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         margin-right: 6px;
     }
 
-    body.sidebar-menu-opened .vertical-sidebar .mobile-sidebar-toggle {
+    .vertical-sidebar .mobile-sidebar-toggle {
         display: inline-flex !important;
         align-items: center;
         justify-content: center;
@@ -728,7 +728,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         cursor: pointer;
     }
 
-    body.sidebar-menu-opened .vertical-sidebar .mobile-sidebar-toggle:active {
+    .vertical-sidebar .mobile-sidebar-toggle:active {
         background: rgba(15, 98, 106, 0.18);
     }
 

@@ -11,6 +11,12 @@
         </a>
     </div>
 
+    <button type="button" class="mobile-sidebar-toggle" style="display: none;"
+        aria-label="Close navigation menu" title="Close navigation menu"
+        onclick="naidapa_theme.close_mobile_sidebar(event)">
+        <iconify-icon icon="line-md:menu-fold-right"></iconify-icon>
+    </button>
+
     <div class="app-nav" id="app-simple-bar" data-simplebar>
         <ul class="main-nav p-0 mt-2">
             {% if menu_data and menu_data.custom_menu %}
