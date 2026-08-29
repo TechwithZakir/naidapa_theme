@@ -166,20 +166,6 @@
         $(document).off('click.naidapa_collapse', '.vertical-sidebar [data-bs-toggle="collapse"]').on('click.naidapa_collapse', '.vertical-sidebar [data-bs-toggle="collapse"]', function (e) {
             naidapa_theme.toggle_collapse(this, e);
         });
-
-        $(document).off('click.naidapa_mobile_top_toggle', '.mobile-sidebar-top-toggle').on('click.naidapa_mobile_top_toggle', '.mobile-sidebar-top-toggle', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const $body = $('body');
-            const $sidebar = $('.vertical-sidebar');
-            const isOpen = $body.hasClass('sidebar-menu-opened');
-
-            $body.toggleClass('sidebar-menu-opened', !isOpen);
-            $sidebar.toggleClass('semi-nav', !isOpen);
-            $('.header-toggle iconify-icon').attr('icon', isOpen ? 'line-md:menu-fold-left' : 'line-md:menu-fold-right');
-            localStorage.setItem('naidapa_sidebar_collapsed', isOpen ? 'false' : 'true');
-        });
     };
 
     naidapa_theme.run_patches = function () {
