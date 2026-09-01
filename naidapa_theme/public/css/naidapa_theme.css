@@ -212,12 +212,12 @@ select.input-with-feedback {
 }
 
 /* Permanently hide Frappe's native workspace sidebars everywhere */
-.layout-side-section,
-.desk-sidebar,
-.sidebar-toggle-btn,
-body.naidapa-theme-active .layout-side-section,
-body.naidapa-theme-active .sidebar-toggle-btn,
-body.naidapa-theme-active .desk-sidebar {
+body:not(.naidapa-frappe-v16) .layout-side-section,
+body:not(.naidapa-frappe-v16) .desk-sidebar,
+body:not(.naidapa-frappe-v16) .sidebar-toggle-btn,
+body.naidapa-theme-active:not(.naidapa-frappe-v16) .layout-side-section,
+body.naidapa-theme-active:not(.naidapa-frappe-v16) .sidebar-toggle-btn,
+body.naidapa-theme-active:not(.naidapa-frappe-v16) .desk-sidebar {
     display: none !important;
     width: 0 !important;
     max-width: 0 !important;
@@ -710,7 +710,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
         box-shadow: none !important;
     }
 
-    nav {
+    nav.vertical-sidebar {
         margin-left: -286px;
     }
 
@@ -721,7 +721,7 @@ nav .app-nav .main-nav>li.active>a iconify-icon {
     }
 
     /* On mobile, sidebar-menu-opened shows the sidebar */
-    body.sidebar-menu-opened nav {
+    body.sidebar-menu-opened nav.vertical-sidebar {
         margin-left: 0;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
@@ -1377,4 +1377,11 @@ span.sidebar-item-label {
 body button.btn.btn-xs.btn-danger.grid-remove-rows:not(:hover):not(:focus):not(:focus-visible):not(:active) {
     color: #e14e5a !important;
     -webkit-text-fill-color: #e14e5a !important;
+}
+
+/* Preserve Frappe v16's native sidebar; only align its title as requested. */
+body.naidapa-frappe-v16 .body-sidebar .title-container {
+    width: 100%;
+    align-items: flex-end;
+    text-align: right;
 }

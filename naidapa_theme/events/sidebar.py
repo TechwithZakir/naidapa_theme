@@ -138,11 +138,13 @@ def boot_session(bootinfo):
     except Exception:
         bootinfo.sidebar_logo = "/assets/naidapa_theme/images/logo.png"
 
-    # The v16 /desk shell does not render this app's legacy www/app.html.
-    # Supplying the menu in boot lets the desk asset create the same sidebar.
     bootinfo.naidapa_desk_route = DESK_ROUTE_PREFIX
-    try:
-        bootinfo.naidapa_menu_data = get_desktop_pages()
-    except Exception:
-        frappe.log_error(frappe.get_traceback(), "Naidapa sidebar boot failed")
-        bootinfo.naidapa_menu_data = {"custom_menu": False, "pages": []}
+
+    # Frappe v16 owns its persistent sidebar. Only the legacy /app shell needs
+    # the theme menu data; injecting it into /desk would overlap the native UI.
+    if DESK_ROUTE_PREFIX == "/app":
+        try:
+            bootinfo.naidapa_menu_data = get_desktop_pages()
+        except Exception:
+            frappe.log_error(frappe.get_traceback(), "Naidapa sidebar boot failed")
+            bootinfo.naidapa_menu_data = {"custom_menu": False, "pages": []}

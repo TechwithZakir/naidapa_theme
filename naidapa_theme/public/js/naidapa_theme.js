@@ -3,10 +3,20 @@
 
     frappe.provide("naidapa_theme");
 
+    naidapa_theme.is_frappe_v16 = function () {
+        return window.location.pathname === '/desk' ||
+            window.location.pathname.indexOf('/desk/') === 0 ||
+            (frappe.boot && frappe.boot.naidapa_desk_route === '/desk');
+    };
+
     naidapa_theme.setup = function () {
+        const isV16 = naidapa_theme.is_frappe_v16();
+        if (isV16) {
+            $('body').addClass('naidapa-frappe-v16');
+        }
         naidapa_theme.ensure_v16_sidebar();
         $('body').addClass('naidapa-theme-active');
-        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (!isV16 && localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
@@ -25,6 +35,8 @@
     };
 
     naidapa_theme.ensure_v16_sidebar = function () {
+        // Frappe v16 provides its own persistent Workspace Sidebar.
+        if (naidapa_theme.is_frappe_v16()) return;
         if ($('.vertical-sidebar').length || !frappe.boot || !frappe.boot.naidapa_menu_data) return;
 
         const menu = frappe.boot.naidapa_menu_data;
@@ -232,7 +244,7 @@
 
     naidapa_theme.run_patches = function () {
         naidapa_theme.ensure_v16_sidebar();
-        if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
+        if (!naidapa_theme.is_frappe_v16() && localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
@@ -276,6 +288,7 @@
     };
 
     naidapa_theme.inject_navbar_toggle = function () {
+        if (naidapa_theme.is_frappe_v16()) return;
         const isCollapsed = $('body').hasClass('sidebar-menu-opened');
         const iconName = isCollapsed ? 'line-md:menu-fold-right' : 'line-md:menu-fold-left';
 
@@ -359,6 +372,7 @@
     };
 
     naidapa_theme.remove_native_elements = function () {
+        if (naidapa_theme.is_frappe_v16()) return;
         $('.layout-side-section, .sidebar-toggle-btn, .desk-sidebar').hide();
     };
 
