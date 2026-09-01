@@ -1,6 +1,15 @@
 import json
 import frappe
-from frappe.desk.desktop import get_workspace_sidebar_items, get_desktop_page
+from frappe.desk.desktop import get_desktop_page
+
+try:
+    # Frappe v15 and earlier.
+    from frappe.desk.desktop import get_workspace_sidebar_items
+    DESK_ROUTE_PREFIX = "/app"
+except ImportError:
+    # Frappe v16 renamed the workspace-list API during the DeskViews refactor.
+    from frappe.desk.desktop import get_workspaces as get_workspace_sidebar_items
+    DESK_ROUTE_PREFIX = "/desk"
 
 ICON_MAP = [
     (["home", "dashboard"], "home"),
@@ -59,7 +68,7 @@ def get_desktop_pages():
             item_data = {
                 "name": ws_name,
                 "title": ws_title,
-                "route": f"/app/{ws_route}",
+                "route": f"{DESK_ROUTE_PREFIX}/{ws_route}",
                 "icon_name": ws_icon,
             }
 
@@ -83,7 +92,7 @@ def get_desktop_pages():
                     "is_group": False,
                     "name": ws_name,
                     "title": ws_title,
-                    "route": f"/app/{ws_route}",
+                    "route": f"{DESK_ROUTE_PREFIX}/{ws_route}",
                     "icon_name": ws_icon
                 })
 
@@ -128,3 +137,12 @@ def boot_session(bootinfo):
         bootinfo.theme_settings = theme_settings.as_dict()
     except Exception:
         bootinfo.sidebar_logo = "/files/dr-codex-logo.png"
+
+    # The v16 /desk shell does not render this app's legacy www/app.html.
+    # Supplying the menu in boot lets the desk asset create the same sidebar.
+    bootinfo.naidapa_desk_route = DESK_ROUTE_PREFIX
+    try:
+        bootinfo.naidapa_menu_data = get_desktop_pages()
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Naidapa sidebar boot failed")
+        bootinfo.naidapa_menu_data = {"custom_menu": False, "pages": []}

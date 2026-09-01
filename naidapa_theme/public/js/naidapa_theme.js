@@ -4,12 +4,71 @@
     frappe.provide("naidapa_theme");
 
     naidapa_theme.setup = function () {
+        naidapa_theme.ensure_v16_sidebar();
         $('body').addClass('naidapa-theme-active');
         if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
         }
         naidapa_theme.run_patches();
+    };
+
+    naidapa_theme.escape_html = function (value) {
+        return $('<div>').text(value == null ? '' : String(value)).html();
+    };
+
+    naidapa_theme.sidebar_link = function (item, extraClass) {
+        const title = naidapa_theme.escape_html(item.title || item.name || '');
+        const route = naidapa_theme.escape_html(item.route || '#');
+        const icon = naidapa_theme.escape_html(item.icon_name || 'grid-3');
+        return `<li class="${extraClass || 'no-sub'}"><a href="${route}" title="${title}" class="${extraClass === 'sidebar-sub-item' ? 'sidebar-sub-link' : ''}"><span class="sidebar-item-icon"><iconify-icon icon="line-md:${icon}"></iconify-icon></span><span class="sidebar-item-label">${title}</span></a></li>`;
+    };
+
+    naidapa_theme.ensure_v16_sidebar = function () {
+        if ($('.vertical-sidebar').length || !frappe.boot || !frappe.boot.naidapa_menu_data) return;
+
+        const menu = frappe.boot.naidapa_menu_data;
+        const routePrefix = frappe.boot.naidapa_desk_route || '/desk';
+        const logo = naidapa_theme.escape_html(frappe.boot.sidebar_logo || '/files/dr-codex-logo.png');
+        let items = '';
+
+        if (menu.custom_menu) {
+            (menu.items_list || []).forEach((item, index) => {
+                if (!item.is_group) {
+                    items += naidapa_theme.sidebar_link(item);
+                    return;
+                }
+                const id = `naidapa-group-${index}`;
+                const label = naidapa_theme.escape_html(item.group_name || '');
+                const icon = naidapa_theme.escape_html(item.group_icon || 'grid-3');
+                const children = (item.sub_items || []).map(child => naidapa_theme.sidebar_link(child, 'sidebar-sub-item')).join('');
+                items += `<li class="sidebar-group-item"><a aria-expanded="true" data-bs-toggle="collapse" data-bs-target="#${id}" href="javascript:void(0)" class="sidebar-group-header"><span class="sidebar-item-icon"><iconify-icon icon="line-md:${icon}"></iconify-icon></span><span class="sidebar-item-label">${label}</span></a><ul class="collapse sidebar-group-box show" id="${id}">${children}</ul></li>`;
+            });
+        } else {
+            (menu.pages || []).forEach((page, index) => {
+                const pageRoute = `${routePrefix}/${String(page.name || '').toLowerCase().replace(/\s+/g, '-')}`;
+                const pageItem = Object.assign({}, page, { route: pageRoute });
+                const children = page.child_workspace || [];
+                if (!children.length) {
+                    items += naidapa_theme.sidebar_link(pageItem);
+                    return;
+                }
+                const id = `naidapa-workspace-${index}`;
+                const label = naidapa_theme.escape_html(page.title || page.name || '');
+                const icon = naidapa_theme.escape_html(page.icon_name || 'grid-3');
+                const childHtml = children.map(child => naidapa_theme.sidebar_link(Object.assign({}, child, {
+                    route: `${routePrefix}/${String(child.name || '').toLowerCase().replace(/\s+/g, '-')}`
+                }), 'sidebar-sub-item')).join('');
+                items += `<li class="sidebar-group-item"><a aria-expanded="true" data-bs-toggle="collapse" data-bs-target="#${id}" href="javascript:void(0)" class="sidebar-group-header"><span class="sidebar-item-icon"><iconify-icon icon="line-md:${icon}"></iconify-icon></span><span class="sidebar-item-label">${label}</span></a><ul class="collapse sidebar-group-box show" id="${id}">${childHtml}</ul></li>`;
+            });
+        }
+
+        const sidebar = `<nav class="vertical-sidebar"><div class="app-logo"><a class="logo d-inline-block" href="${routePrefix}" title="Home"><img alt="Logo" src="${logo}"></a></div><div class="app-nav" id="app-simple-bar" data-simplebar><ul class="main-nav p-0 mt-2">${items}</ul></div></nav>`;
+        const $main = $('body > .main-section').first();
+        if ($main.length) {
+            $main.addClass('app-content').wrap('<div class="app-wrapper ocean-theme naidapa-theme-active"></div>');
+            $main.before(sidebar);
+        }
     };
 
     naidapa_theme.setup_icon_picker = function () {
@@ -169,6 +228,7 @@
     };
 
     naidapa_theme.run_patches = function () {
+        naidapa_theme.ensure_v16_sidebar();
         if (localStorage.getItem('naidapa_sidebar_collapsed') === 'true') {
             $('body').addClass('sidebar-menu-opened');
             $('.vertical-sidebar').addClass('semi-nav');
@@ -268,7 +328,7 @@
             let href = ($(this).attr('href') || '').toLowerCase();
             if (!href || href.startsWith('javascript')) return;
 
-            let page_slug = href.replace('/app/', '').replace('/', '');
+            let page_slug = href.replace(/^\/(app|desk)\//, '').replace('/', '');
 
             if (current_path === href || (page_slug && route_str && route_str.includes(page_slug))) {
                 $(this).addClass('active');

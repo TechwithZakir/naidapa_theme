@@ -1,6 +1,6 @@
 <nav class="vertical-sidebar">
     <div class="app-logo">
-        <a class="logo d-inline-block" href="/app" title="{{ app_name }}">
+        <a class="logo d-inline-block" href="{{ boot.naidapa_desk_route or '/app' }}" title="{{ app_name }}">
             {% if theme_settings and theme_settings.sidebar_logo %}
             <img alt="{{ app_name }}" src="{{ theme_settings.sidebar_logo }}">
             {% elif app_logo %}
@@ -65,7 +65,7 @@
                         {% for child in page.child_workspace %}
                         {% set child_icon = child.icon_name or 'grid-3' %}
                         <li class="sidebar-sub-item">
-                            <a href="/app/{{ child.name | lower | replace(' ', '-') }}" class="sidebar-sub-link">
+                            <a href="{{ boot.naidapa_desk_route or '/app' }}/{{ child.name | lower | replace(' ', '-') }}" class="sidebar-sub-link">
                                 <span class="sidebar-item-icon">
                                     <iconify-icon icon="line-md:{{ child_icon }}"></iconify-icon>
                                 </span>
@@ -77,7 +77,7 @@
                 </li>
                 {% else %}
                 <li class="no-sub">
-                    <a href="/app/{{ page_lower | replace(' ', '-') }}" title="{{ page.title }}">
+                    <a href="{{ boot.naidapa_desk_route or '/app' }}/{{ page_lower | replace(' ', '-') }}" title="{{ page.title }}">
                         <span class="sidebar-item-icon">
                             <iconify-icon icon="line-md:{{ icon_code }}"></iconify-icon>
                         </span>

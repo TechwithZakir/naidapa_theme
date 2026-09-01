@@ -39,6 +39,8 @@ def get_context(context):
     include_icons = hooks.get("app_include_icons", [])
     frappe.local.preload_assets["icons"].extend(include_icons)
 
+    menu_data = get_desktop_pages()
+
     context.update(
         {
             "no_cache": 1,
@@ -57,8 +59,8 @@ def get_context(context):
             "app_name": (
                 frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or "Frappe"
             ),
-            "menu_data": get_desktop_pages(),
-            "pages": (get_desktop_pages().get("pages", []) if isinstance(get_desktop_pages(), dict) else get_desktop_pages()),
+            "menu_data": menu_data,
+            "pages": menu_data.get("pages", []) if isinstance(menu_data, dict) else menu_data,
         }
     )
 
