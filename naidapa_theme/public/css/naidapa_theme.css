@@ -1372,3 +1372,14 @@ span.sidebar-item-label {
     height: 32px !important;
     justify-content: center !important;
 }
+
+/* Child-table delete action: keep the idle label visible as a danger action. */
+.grid-footer .grid-remove-rows.btn-danger:not(:hover):not(:focus):not(:active) {
+    color: rgb(var(--ki-danger, 225, 78, 90)) !important;
+}
+
+.grid-footer .grid-remove-rows.btn-danger:hover,
+.grid-footer .grid-remove-rows.btn-danger:focus,
+.grid-footer .grid-remove-rows.btn-danger:active {
+    color: #ffffff !important;
+}
