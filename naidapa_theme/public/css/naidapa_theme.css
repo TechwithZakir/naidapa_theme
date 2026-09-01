@@ -1373,13 +1373,8 @@ span.sidebar-item-label {
     justify-content: center !important;
 }
 
-/* Child-table delete action: keep the idle label visible as a danger action. */
-.grid-footer .grid-remove-rows.btn-danger:not(:hover):not(:focus):not(:active) {
-    color: rgb(var(--ki-danger, 225, 78, 90)) !important;
-}
-
-.grid-footer .grid-remove-rows.btn-danger:hover,
-.grid-footer .grid-remove-rows.btn-danger:focus,
-.grid-footer .grid-remove-rows.btn-danger:active {
-    color: #ffffff !important;
+/* Child-table delete action: change only the default/idle text color. */
+body button.btn.btn-xs.btn-danger.grid-remove-rows:not(:hover):not(:focus):not(:focus-visible):not(:active) {
+    color: #e14e5a !important;
+    -webkit-text-fill-color: #e14e5a !important;
 }
