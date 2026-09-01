@@ -71,10 +71,10 @@ def get_context(context):
             theme_settings.get("sidebar_logo")
             or frappe.get_website_settings("app_logo")
             or boot.get("app_logo_url")
-            or "/files/dr-codex-logo.png"
+            or "/assets/naidapa_theme/images/logo.png"
         )
     except Exception:
         context["theme_settings"] = frappe._dict()
-        context["app_logo"] = "/files/dr-codex-logo.png"
+        context["app_logo"] = "/assets/naidapa_theme/images/logo.png"
 
     return context

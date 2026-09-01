@@ -133,10 +133,10 @@ def get_desktop_pages():
 def boot_session(bootinfo):
     try:
         theme_settings = frappe.get_cached_doc("Theme Settings")
-        bootinfo.sidebar_logo = theme_settings.get("sidebar_logo") or "/files/dr-codex-logo.png"
+        bootinfo.sidebar_logo = theme_settings.get("sidebar_logo") or "/assets/naidapa_theme/images/logo.png"
         bootinfo.theme_settings = theme_settings.as_dict()
     except Exception:
-        bootinfo.sidebar_logo = "/files/dr-codex-logo.png"
+        bootinfo.sidebar_logo = "/assets/naidapa_theme/images/logo.png"
 
     # The v16 /desk shell does not render this app's legacy www/app.html.
     # Supplying the menu in boot lets the desk asset create the same sidebar.

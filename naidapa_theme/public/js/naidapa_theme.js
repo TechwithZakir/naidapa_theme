@@ -29,7 +29,7 @@
 
         const menu = frappe.boot.naidapa_menu_data;
         const routePrefix = frappe.boot.naidapa_desk_route || '/desk';
-        const logo = naidapa_theme.escape_html(frappe.boot.sidebar_logo || '/files/dr-codex-logo.png');
+        const logo = naidapa_theme.escape_html(frappe.boot.sidebar_logo || '/assets/naidapa_theme/images/logo.png');
         let items = '';
 
         if (menu.custom_menu) {
@@ -66,7 +66,10 @@
         const sidebar = `<nav class="vertical-sidebar"><div class="app-logo"><a class="logo d-inline-block" href="${routePrefix}" title="Home"><img alt="Logo" src="${logo}"></a></div><div class="app-nav" id="app-simple-bar" data-simplebar><ul class="main-nav p-0 mt-2">${items}</ul></div></nav>`;
         const $main = $('body > .main-section').first();
         if ($main.length) {
-            $main.addClass('app-content').wrap('<div class="app-wrapper ocean-theme naidapa-theme-active"></div>');
+            // Keep .main-section as a direct body child. Frappe v16's container
+            // manager relies on that hierarchy when toggling its page sidebar.
+            $('body').addClass('app-wrapper ocean-theme');
+            $main.addClass('app-content');
             $main.before(sidebar);
         }
     };
@@ -172,7 +175,7 @@
     };
 
     naidapa_theme.update_sidebar_logo = function () {
-        const logo_url = (frappe.boot && frappe.boot.sidebar_logo) || "/files/dr-codex-logo.png";
+        const logo_url = (frappe.boot && frappe.boot.sidebar_logo) || "/assets/naidapa_theme/images/logo.png";
         const $appLogo = $('.vertical-sidebar .app-logo');
 
         if ($appLogo.length) {
@@ -319,7 +322,15 @@
 
     naidapa_theme.highlight_active_route = function () {
         const current_path = window.location.pathname.toLowerCase();
-        const route_str = (typeof frappe !== 'undefined' && frappe.get_route_str ? frappe.get_route_str() : '').toLowerCase();
+        let route_str = '';
+        try {
+            const route = typeof frappe !== 'undefined' && frappe.get_route ? frappe.get_route() : null;
+            if (Array.isArray(route)) {
+                route_str = route.join('/').toLowerCase();
+            }
+        } catch (e) {
+            // The router is not initialized during the first v16 app_ready event.
+        }
 
         $('.main-nav li').removeClass('active');
         $('.main-nav a').removeClass('active');
