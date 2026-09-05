@@ -47,8 +47,31 @@
         const navbarColor = settings.primary_color || '';
         const textColor = settings.secondary_color || naidapa_theme.contrast_color(navbarColor);
 
-        if (logo) {
-            $navbar.find('#brand-logo').attr('src', logo);
+        const $navbarHome = $navbar.find('.navbar-home').first();
+        const $brandLogo = $navbarHome.find('#brand-logo, img').first();
+
+        // Frappe v16 gives .navbar-home the remaining row width and fixes its
+        // image at 32px. Inline values keep branding compact across builds.
+        $navbarHome.css({
+            'display': 'flex',
+            'align-items': 'center',
+            'flex': '0 0 auto',
+            'width': 'auto',
+            'min-width': '0',
+            'max-width': 'none',
+            'margin': '0',
+            'padding': '0'
+        });
+        $brandLogo.css({
+            'height': '50px',
+            'max-height': '50px',
+            'width': 'auto',
+            'max-width': '140px',
+            'object-fit': 'contain'
+        });
+
+        if (logo && $brandLogo.attr('src') !== logo) {
+            $brandLogo.attr('src', logo);
         }
         if (navbarColor) {
             $navbar.css({
@@ -69,8 +92,14 @@
         let $identity = $navbar.find('.naidapa-desktop-identity');
         if (!$identity.length) {
             $identity = $('<div class="naidapa-desktop-identity"></div>');
-            $navbar.find('.navbar-home').first().after($identity);
+            $navbarHome.after($identity);
         }
+        $identity.css({
+            'flex': '0 1 auto',
+            'width': 'auto',
+            'margin-left': '4px',
+            'margin-right': '12px'
+        });
         const identityParts = [];
         if (company) {
             identityParts.push(`<span class="naidapa-identity-item naidapa-company-name"><iconify-icon icon="line-md:building"></iconify-icon><span>${company}</span></span>`);
