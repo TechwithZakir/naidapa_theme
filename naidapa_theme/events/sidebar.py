@@ -144,6 +144,22 @@ def boot_session(bootinfo):
         frappe.db.get_value("User", frappe.session.user, "full_name")
         or frappe.session.user
     )
+    try:
+        logged_on_at = frappe.db.get_value(
+            "Activity Log",
+            {"user": frappe.session.user, "operation": "Login"},
+            "creation",
+            order_by="creation desc",
+        )
+        bootinfo.naidapa_logged_on_at = (
+            frappe.utils.format_datetime(logged_on_at, "dd-MM-yyyy HH:mm")
+            if logged_on_at
+            else frappe.utils.format_datetime(frappe.utils.now_datetime(), "dd-MM-yyyy HH:mm")
+        )
+    except Exception:
+        bootinfo.naidapa_logged_on_at = frappe.utils.format_datetime(
+            frappe.utils.now_datetime(), "dd-MM-yyyy HH:mm"
+        )
 
     # Frappe v16 owns its persistent sidebar. Only the legacy /app shell needs
     # the theme menu data; injecting it into /desk would overlap the native UI.

@@ -62,13 +62,27 @@
         const company = naidapa_theme.escape_html((frappe.boot && frappe.boot.naidapa_company_name) || '');
         const user = naidapa_theme.escape_html((frappe.boot && frappe.boot.naidapa_user_name) ||
             (frappe.session && frappe.session.user) || '');
+        const loggedOn = naidapa_theme.escape_html(
+            (frappe.boot && frappe.boot.naidapa_logged_on_at) || ''
+        );
 
         let $identity = $navbar.find('.naidapa-desktop-identity');
         if (!$identity.length) {
             $identity = $('<div class="naidapa-desktop-identity"></div>');
             $navbar.find('.navbar-home').first().after($identity);
         }
-        const identityHtml = `${company ? `<span class="naidapa-company-name">${company}</span>` : ''}${user ? `<span class="naidapa-login-name">${__('Logged in as')} ${user}</span>` : ''}`;
+        const identityParts = [];
+        if (company) {
+            identityParts.push(`<span class="naidapa-identity-item naidapa-company-name"><iconify-icon icon="line-md:building"></iconify-icon><span>${company}</span></span>`);
+        }
+        if (user) {
+            identityParts.push(`<span class="naidapa-identity-item naidapa-login-name"><iconify-icon icon="line-md:person"></iconify-icon><span>${user}</span></span>`);
+        }
+        if (loggedOn) {
+            identityParts.push(`<span class="naidapa-identity-item naidapa-login-time"><iconify-icon icon="line-md:calendar"></iconify-icon><span>${__('Logged on at')} ${loggedOn}</span></span>`);
+        }
+        const separator = '<span class="naidapa-identity-separator" aria-hidden="true"><iconify-icon icon="line-md:chevron-right"></iconify-icon></span>';
+        const identityHtml = identityParts.join(separator);
         if ($identity.html() !== identityHtml) {
             $identity.html(identityHtml);
         }

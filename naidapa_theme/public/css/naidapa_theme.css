@@ -1392,27 +1392,55 @@ body.naidapa-frappe-v16 .desktop-navbar {
 }
 
 body.naidapa-frappe-v16 .desktop-navbar .navbar-home {
-    display: flex;
-    align-items: center;
-    flex: 0 0 auto;
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+    width: fit-content !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 body.naidapa-frappe-v16 .desktop-navbar #brand-logo {
     width: auto;
-    max-width: 40px;
-    max-height: 32px;
+    max-width: 140px;
+    height: 50px !important;
+    max-height: 50px;
     object-fit: contain;
 }
 
 body.naidapa-frappe-v16 .desktop-navbar .naidapa-desktop-identity {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     min-width: 0;
-    margin-left: 8px;
+    margin-left: 4px;
     margin-right: 12px;
     color: inherit;
     white-space: nowrap;
+}
+
+body.naidapa-frappe-v16 .desktop-navbar .naidapa-identity-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+body.naidapa-frappe-v16 .desktop-navbar .naidapa-identity-item iconify-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+}
+
+body.naidapa-frappe-v16 .desktop-navbar .naidapa-identity-separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 13px;
+    height: 16px;
+    opacity: 0.55;
 }
 
 body.naidapa-frappe-v16 .desktop-navbar .naidapa-company-name {
@@ -1425,12 +1453,22 @@ body.naidapa-frappe-v16 .desktop-navbar .naidapa-login-name {
     opacity: 0.8;
 }
 
+body.naidapa-frappe-v16 .desktop-navbar .naidapa-login-time {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
 body.naidapa-frappe-v16 .desktop-navbar .desktop-search-wrapper {
     margin-left: auto;
 }
 
 @media (max-width: 767px) {
     body.naidapa-frappe-v16 .desktop-navbar .naidapa-login-name {
+        display: none;
+    }
+
+    body.naidapa-frappe-v16 .desktop-navbar .naidapa-login-time,
+    body.naidapa-frappe-v16 .desktop-navbar .naidapa-identity-separator {
         display: none;
     }
 
