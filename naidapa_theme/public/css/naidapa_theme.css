@@ -1410,6 +1410,13 @@ body.naidapa-frappe-v16 .desktop-navbar #brand-logo {
     object-fit: contain;
 }
 
+/* Exact Frappe v16 desktop logo selector. */
+body.naidapa-frappe-v16 .desktop-navbar .navbar-home img {
+    height: 50px !important;
+    max-height: 50px !important;
+    width: auto !important;
+}
+
 body.naidapa-frappe-v16 .desktop-navbar .naidapa-desktop-identity {
     display: flex;
     align-items: center;
