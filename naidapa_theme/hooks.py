@@ -108,9 +108,9 @@ portal_menu_items = [
 # Installation
 # ------------
 
-# Frappe v16 supplies and manages its own persistent Workspace Sidebar.
-# Enable this hook only when using the legacy Frappe v15 /app sidebar.
-# extend_bootinfo = "naidapa_theme.events.sidebar.boot_session"
+# Supplies theme branding to Desk. On Frappe v16 this does not replace the
+# framework-owned persistent Workspace Sidebar.
+extend_bootinfo = "naidapa_theme.events.sidebar.boot_session"
 
 # before_install = "naidapa_theme.install.before_install"
 after_install = "naidapa_theme.install.after_install"

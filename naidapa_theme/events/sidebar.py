@@ -139,6 +139,11 @@ def boot_session(bootinfo):
         bootinfo.sidebar_logo = "/assets/naidapa_theme/images/logo.png"
 
     bootinfo.naidapa_desk_route = DESK_ROUTE_PREFIX
+    bootinfo.naidapa_company_name = frappe.defaults.get_user_default("Company") or ""
+    bootinfo.naidapa_user_name = (
+        frappe.db.get_value("User", frappe.session.user, "full_name")
+        or frappe.session.user
+    )
 
     # Frappe v16 owns its persistent sidebar. Only the legacy /app shell needs
     # the theme menu data; injecting it into /desk would overlap the native UI.

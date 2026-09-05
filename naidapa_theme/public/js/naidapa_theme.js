@@ -27,6 +27,53 @@
         return $('<div>').text(value == null ? '' : String(value)).html();
     };
 
+    naidapa_theme.contrast_color = function (color) {
+        const hex = String(color || '').replace('#', '');
+        if (!/^[0-9a-f]{6}$/i.test(hex)) return '#ffffff';
+        const red = parseInt(hex.slice(0, 2), 16);
+        const green = parseInt(hex.slice(2, 4), 16);
+        const blue = parseInt(hex.slice(4, 6), 16);
+        return ((red * 299 + green * 587 + blue * 114) / 1000) > 150 ? '#17202a' : '#ffffff';
+    };
+
+    naidapa_theme.update_v16_desktop_navbar = function () {
+        if (!naidapa_theme.is_frappe_v16()) return;
+
+        const $navbar = $('.desktop-navbar').first();
+        if (!$navbar.length) return;
+
+        const settings = (frappe.boot && frappe.boot.theme_settings) || {};
+        const logo = settings.sidebar_logo || (frappe.boot && frappe.boot.sidebar_logo);
+        const navbarColor = settings.primary_color || '';
+        const textColor = settings.secondary_color || naidapa_theme.contrast_color(navbarColor);
+
+        if (logo) {
+            $navbar.find('#brand-logo').attr('src', logo);
+        }
+        if (navbarColor) {
+            $navbar.css({
+                'background-color': navbarColor,
+                'color': textColor,
+                '--text-color': textColor,
+                '--text-muted': textColor
+            });
+        }
+
+        const company = naidapa_theme.escape_html((frappe.boot && frappe.boot.naidapa_company_name) || '');
+        const user = naidapa_theme.escape_html((frappe.boot && frappe.boot.naidapa_user_name) ||
+            (frappe.session && frappe.session.user) || '');
+
+        let $identity = $navbar.find('.naidapa-desktop-identity');
+        if (!$identity.length) {
+            $identity = $('<div class="naidapa-desktop-identity"></div>');
+            $navbar.find('.navbar-home').first().after($identity);
+        }
+        const identityHtml = `${company ? `<span class="naidapa-company-name">${company}</span>` : ''}${user ? `<span class="naidapa-login-name">${__('Logged in as')} ${user}</span>` : ''}`;
+        if ($identity.html() !== identityHtml) {
+            $identity.html(identityHtml);
+        }
+    };
+
     naidapa_theme.sidebar_link = function (item, extraClass) {
         const title = naidapa_theme.escape_html(item.title || item.name || '');
         const route = naidapa_theme.escape_html(item.route || '#');
@@ -257,6 +304,7 @@
         naidapa_theme.inject_navbar_toggle();
         naidapa_theme.mutate_number_cards();
         naidapa_theme.setup_icon_picker();
+        naidapa_theme.update_v16_desktop_navbar();
     };
 
     naidapa_theme.mutate_number_cards = function () {

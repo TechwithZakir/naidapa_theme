@@ -11,12 +11,13 @@
         {
             "fieldname": "section_break_branding",
             "fieldtype": "Section Break",
-            "label": "Branding"
+            "label": "Desktop Navigation Settings"
         },
         {
             "fieldname": "sidebar_logo",
             "fieldtype": "Attach",
-            "label": "SIdebar Logo"
+            "description": "Brand logo shown in the Frappe v16 desktop navigation bar and the legacy sidebar.",
+            "label": "Brand Logo"
         },
         {
             "fieldname": "column_break_branding",
